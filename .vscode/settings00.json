@@ -37,7 +37,6 @@
     "streamlit",
     "PyMuPDF",
     "fitz",
-    "downloadbutton",
-    "pixmap"
+    "downloadbutton"
   ]
 }

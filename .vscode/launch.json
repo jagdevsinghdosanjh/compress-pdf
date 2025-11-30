@@ -12,6 +12,22 @@
       ],
       "console": "integratedTerminal",
       "justMyCode": true
+    },
+    {
+      "name": "Debug compress_pdf.py (Standalone)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/utils/compress_pdf.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Debug Any Python Script",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
     }
   ]
 }
