@@ -1,0 +1,12 @@
+# Core
+streamlit>=1.31
+
+# Development helpers
+black>=24.0.0        # Code formatter
+isort>=5.12.0        # Import sorter
+flake8>=7.0.0        # Linter
+mypy>=1.8.0          # Type checker
+python-dotenv>=1.0.0 # Environment variable loader
+
+# Optional PDF utilities (if you want to inspect PDFs directly)
+PyPDF2>=3.0.0
