@@ -29,5 +29,14 @@
 
   "python.analysis.extraPaths": [
     "./src"
+  ],
+
+  "cSpell.words": [
+    "getbuffer",
+    "fileuploader",
+    "streamlit",
+    "PyMuPDF",
+    "fitz",
+    "downloadbutton"
   ]
 }
