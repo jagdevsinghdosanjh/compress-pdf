@@ -1,55 +1,32 @@
 import os
-import subprocess
-import platform
-import shutil
-from dotenv import load_dotenv
+import fitz  # PyMuPDF
 
-load_dotenv()
+def compress_pdf(input_path: str, output_path: str, zoom: float = 0.5) -> dict:
+    """
+    Compress a PDF using PyMuPDF by rasterizing pages at a lower zoom.
+    Args:
+        input_path: Path to input PDF
+        output_path: Path to save compressed PDF
+        zoom: Scale factor (0.5 = 50% size, smaller = more compression)
 
-def _detect_ghostscript() -> str:
-    # Priority: .env override
-    override = os.getenv("GHOSTSCRIPT_PATH")
-    if override and shutil.which(override):
-        return override
-
-    # Auto-detect based on platform
-    system = platform.system().lower()
-    candidates = []
-
-    if system == "windows":
-        candidates = ["gswin64c", "gswin32c"]
-    else:
-        candidates = ["gs"]
-
-    for exe in candidates:
-        path = shutil.which(exe)
-        if path:
-            return path
-
-    raise FileNotFoundError("Ghostscript executable not found. Set GHOSTSCRIPT_PATH in .env or add to PATH.")
-
-def compress_pdf(input_path, output_path, profile, dpi=100):
-    profile_map = {
-        "Max Compression (/screen)": "/screen",
-        "Balanced (/ebook)": "/ebook",
-        "High Quality (/printer)": "/printer"
-    }
-    gs_profile = profile_map.get(profile, "/ebook")
-
+    Returns:
+        dict: {'ok': bool, 'size_mb': float, 'error': Optional[str]}
+    """
     try:
-        gs_path = _detect_ghostscript()
-        command = [
-            gs_path,
-            "-sDEVICE=pdfwrite",
-            "-dCompatibilityLevel=1.4",
-            f"-dPDFSETTINGS={gs_profile}",
-            "-dDownsampleColorImages=true",
-            f"-dColorImageResolution={dpi}",
-            "-o", output_path,
-            input_path
-        ]
-        subprocess.run(command, check=True)
+        doc = fitz.open(input_path)
+        new_doc = fitz.open()
+
+        for page in doc:
+            pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom))
+            img_pdf = fitz.open(stream=pix.tobytes("png"), filetype="png")
+            new_doc.insert_pdf(img_pdf)
+
+        new_doc.save(output_path, deflate=True)
+        doc.close()
+        new_doc.close()
+
         size_mb = os.path.getsize(output_path) / (1024 * 1024)
         return {"ok": True, "size_mb": size_mb, "error": None}
+
     except Exception as e:
         return {"ok": False, "size_mb": float("inf"), "error": str(e)}
