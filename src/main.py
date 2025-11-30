@@ -3,7 +3,7 @@ import streamlit as st
 from utils import compress_pdf
 
 st.set_page_config(page_title="Bulk PDF Compressor", layout="wide")
-st.title("📄 Bulk PDF Compressor (<7 MB)")
+st.title("📄 Bulk PDF Compressor (<7 MB) By CF GHS Chananke - Jagdev Singh")
 
 # Ensure folders exist
 os.makedirs("data", exist_ok=True)
